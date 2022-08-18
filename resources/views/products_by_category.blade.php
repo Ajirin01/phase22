@@ -414,18 +414,18 @@
                 </div>
             </div>
         </div>
-        @endif
-        <!-- Quick view modal end -->
-    
-        @if (Session::get('msg') == "created")
-            <a href="#" data-toggle="modal" id="model" data-target="#quick_view"> <span data-toggle="tooltip" data-placement="left" title="Quick view"><i class="fa fa-search"></i></span> </a>
-    
-            <script>$(document).ready(function(){
-                document.getElementById('model').click()
-            })</script>
-            {{Session::put('msg', '')}}
-            {{Session::put('cart', '')}}
-        @endif
+    @endif
+    <!-- Quick view modal end -->
+
+    @if (Session::get('msg') == "created")
+        <a href="#" data-toggle="modal" id="model" data-target="#quick_view"> <span data-toggle="tooltip" data-placement="left" title="Quick view"><i class="fa fa-search"></i></span> </a>
+
+        <script>$(document).ready(function(){
+            document.getElementById('model').click()
+        })</script>
+        {{Session::put('msg', '')}}
+        {{Session::put('cart', '')}}
+    @endif
 
     
 @endsection
