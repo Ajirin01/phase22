@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Product;
 use App\Order;
@@ -73,20 +74,7 @@ class DashboardController extends Controller
             }
             
         }
-        // return response()->json($products);
-        // $products = [
-        //     ['name' => 'January', 'data'=> $jan_sale],
-        //     ['name' => 'Feburary', 'data'=> $feb_sale],
-        //     ['name' => 'March', 'data'=> $mar_sale],
-        //     ['name' => 'May', 'data'=> $may_sale],
-        //     ['name' => 'June', 'data'=> $jun_sale],
-        //     ['name' => 'July', 'data'=> $jul_sale],
-        //     ['name' => 'August', 'data'=> $aug_sale],
-        //     ['name' => 'September', 'data'=> $sep_sale],
-        //     ['name' => 'Octobar', 'data'=> $oct_sale],
-        //     ['name' => 'November', 'data'=> $nov_sale],
-        //     ['name' => 'December', 'data'=> $dec_sale],
-        // ];
+        
 
         $latest_products = Product::orderBy('id', 'desc')->take(10)->get();
 
@@ -94,15 +82,21 @@ class DashboardController extends Controller
         $carts = Cart::all();
         $users = User::where('role', 'user')->get();
         
-        // return response()->json($months_array);
-
-        // return response()->json(($month_sale));
 
         $dis = 0;
         for ($i=0; $i < count($sales); $i++) { 
             $total = $sales[$i]->total;
             $discount = $sales[$i]->discount;
             $dis = $dis + ($total - $discount);
+        }
+
+        // sales by role
+        if(Auth::user()->role == 'retail rep'){
+            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'wholesale rep'){
+            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'admin rep'){
+            $sales = Sale::orderBy('id', 'desc')->get();
         }
         
         // return response()->json(Carbon::parse($sales[16]->created_at)->month);

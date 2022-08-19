@@ -12,6 +12,7 @@ class Sale extends Model
         'sale_number',
         'payment_method',
         'status',
-        'discount'
+        'discount',
+        'sale_type'
     ];
 }

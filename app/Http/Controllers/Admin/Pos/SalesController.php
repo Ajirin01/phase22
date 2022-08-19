@@ -24,7 +24,15 @@ class SalesController extends Controller
 
     public function index()
     {
-        $sales = Sale::orderBy('id', 'desc')->get();
+        if(Auth::user()->role == 'retail rep'){
+            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'wholesale rep'){
+            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'admin rep'){
+            $sales = Sale::orderBy('id', 'desc')->get();
+        }
+
+        
         // return response()->json($sales);
         return view('Admin.Pos.sales_list',['sales' => $sales]);
     }
@@ -37,7 +45,8 @@ class SalesController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   
+        return response()->json(Session::get('sale_type'));
         return response()->json($request->all());
     }
 
@@ -99,16 +108,6 @@ class SalesController extends Controller
 
         $cart = array();
         $total = 0;
-        
-        // for($i=0; $i<count($added_product['product_name']); $i++){
-        //     array_push($cart,['product_id'=> $added_product['product_id'][$i],
-        //                 'product_name'=> $added_product['product_name'][$i],
-        //                 'product_price'=> $added_product['product_price'][$i],
-        //                 'product_quantity'=> $added_product['product_quantity'][$i]
-        //                 ]);
-
-        //     $total += $added_product['product_price'][$i] * $added_product['product_quantity'][$i];
-        // }
 
         for($i=0; $i<count(json_decode($added_product)); $i++){
             array_push($cart,['product_id'=> json_decode($added_product)[$i]->product_id,
@@ -150,21 +149,10 @@ class SalesController extends Controller
 
     public function processSale(Request $request){
         $data = $request->all();
-
-        // $cart = json_decode($request->cart);
-        // array_push($cart, ['discount'=> $request->discount]);
-
-        // $data['cart'] = json_encode($cart);
-        // return response()->json($data);
         
         $data['sale_rep'] = Auth::user()->name;
         $data['status'] = 'confirmed';
-
-        // $total = $request->total;
-        // $discount = $request->discount;
-
-        // $new_total = $total - $discount;
-        // $data['total'] = $new_total;
+        $data['sale_type'] = Session::get('sale_type');
 
         $create_sale = Sale::create($data);
 

@@ -20,6 +20,8 @@ class OrdersController extends Controller
             $orders = Order::where('status', 'canceled')->get();
         }else if($type == 'completed'){
             $orders = Order::where('status', 'completed')->get();
+        }else{
+            $orders = Order::all();
         }
         // return response()->json($orders);
         return view('Admin.Orders.orders_list',['orders'=> $orders, 'type'=> $type]);

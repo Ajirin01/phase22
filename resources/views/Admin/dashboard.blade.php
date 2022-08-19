@@ -508,129 +508,134 @@
     </div>
     <!-- /.row -->
 
+
     <!-- Main row -->
     <div class="row">
-      <!-- Left col -->
-      <div class="col-md-8">
-        <!-- TABLE: LATEST ORDERS -->
-        <div class="card">
-          <div class="card-header border-transparent">
-            <h3 class="card-title">Latest Orders</h3>
+      @if (Auth::user()->role == 'admin')
+        <!-- Left col -->
+        <div class="col-md-8">
+          <!-- TABLE: LATEST ORDERS -->
+          <div class="card">
+            <div class="card-header border-transparent">
+              <h3 class="card-title">Latest Orders</h3>
 
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove">
-                <i class="fas fa-times"></i>
-              </button>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table m-0">
+                  <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Period</th>
+                    <th>Status</th>
+                    {{-- <th>Popularity</th> --}}
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <input id="products" type="hidden" value="{{json_encode($sale_recap)}}">
+                    <input id="months" type="hidden" value="{{json_encode($months)}}">
+                    @foreach ($latest_orders as $order)
+                      <tr>
+                        <td><a href="pages/examples/invoice.html">{{ $order->order_number }}</a></td>
+                        <td>{{ Carbon\Carbon::parse($order->created_at)->diffForHumans() }}</td>
+                        @if ($order->status == 'shipped')
+                          <td><span class="badge badge-success">{{ $order->status }}</span></td>
+                        @endif
+
+                        @if ($order->status == 'pending')
+                          <td><span class="badge badge-warning">{{ $order->status }}</span></td>
+                        @endif
+
+                        @if ($order->status == 'cancelled')
+                          <td><span class="badge badge-danger">{{ $order->status }}</span></td>
+                        @endif
+
+                        @if ($order->status == 'complete')
+                          <td><span class="badge badge-primary">{{ $order->status }}</span></td>
+                        @endif
+
+                        @if ($order->status == 'confirmed')
+                          <td><span class="badge badge-sucess">{{ $order->status }}</span></td>
+                        @endif
+                        
+                        {{-- <td>
+                          <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                        </td> --}}
+                      </tr>
+                    @endforeach
+                  
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">
+              {{-- <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a> --}}
+              <a href="{{ route('orders_by_type', ['type'=> Session::get('shopping_type')]) }}" class="btn btn-sm btn-secondary float-right">View All Orders</a>
+            </div>
+            <!-- /.card-footer -->
           </div>
-          <!-- /.card-header -->
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table m-0">
-                <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Period</th>
-                  <th>Status</th>
-                  {{-- <th>Popularity</th> --}}
-                </tr>
-                </thead>
-                <tbody>
-                  <input id="products" type="hidden" value="{{json_encode($sale_recap)}}">
-                  <input id="months" type="hidden" value="{{json_encode($months)}}">
-                  @foreach ($latest_orders as $order)
-                    <tr>
-                      <td><a href="pages/examples/invoice.html">{{ $order->order_number }}</a></td>
-                      <td>{{ Carbon\Carbon::parse($order->created_at)->diffForHumans() }}</td>
-                      @if ($order->status == 'shipped')
-                        <td><span class="badge badge-success">{{ $order->status }}</span></td>
-                      @endif
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
 
-                      @if ($order->status == 'pending')
-                        <td><span class="badge badge-warning">{{ $order->status }}</span></td>
-                      @endif
+      
+        <div class="col-md-4">
+          <!-- PRODUCT LIST -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recently Added Products</h3>
 
-                      @if ($order->status == 'cancelled')
-                        <td><span class="badge badge-danger">{{ $order->status }}</span></td>
-                      @endif
-
-                      @if ($order->status == 'complete')
-                        <td><span class="badge badge-primary">{{ $order->status }}</span></td>
-                      @endif
-
-                      @if ($order->status == 'confirmed')
-                        <td><span class="badge badge-sucess">{{ $order->status }}</span></td>
-                      @endif
-                      
-                      {{-- <td>
-                        <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                      </td> --}}
-                    </tr>
-                  @endforeach
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-0">
+              <ul class="products-list product-list-in-card pl-2 pr-2">
+                @foreach ($latest_products as $product)
+                  <li class="item">
+                    <div class="product-img">
+                      <img src="{{ asset('public/uploads/'.$product->image) }}" alt="Product Image" class="img-size-50">
+                    </div>
+                    <div class="product-info">
+                      <a href="javascript:void(0)" class="product-title">{{ $product->name }}
+                        <span class="badge badge-warning float-right">#{{ $product->price }}</span></a>
+                      <span class="product-description">
+                        {{ substr($product->description, 100) }}
+                      </span>
+                    </div>
+                  </li>
+                  <!-- /.item -->
+                @endforeach
                 
-                </tbody>
-              </table>
+              </ul>
             </div>
-            <!-- /.table-responsive -->
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer clearfix">
-            {{-- <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a> --}}
-            <a href="{{ route('orders_by_type', ['type'=> Session::get('shopping_type')]) }}" class="btn btn-sm btn-secondary float-right">View All Orders</a>
-          </div>
-          <!-- /.card-footer -->
-        </div>
-        <!-- /.card -->
-      </div>
-      <!-- /.col -->
-
-      <div class="col-md-4">
-        <!-- PRODUCT LIST -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Recently Added Products</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove">
-                <i class="fas fa-times"></i>
-              </button>
+            <!-- /.card-body -->
+            <div class="card-footer text-center">
+              <a href="{{ route('products.index') }}" class="uppercase">View All Products</a>
             </div>
+            <!-- /.card-footer -->
           </div>
-          <!-- /.card-header -->
-          <div class="card-body p-0">
-            <ul class="products-list product-list-in-card pl-2 pr-2">
-              @foreach ($latest_products as $product)
-                <li class="item">
-                  <div class="product-img">
-                    <img src="{{ asset('public/uploads/'.$product->image) }}" alt="Product Image" class="img-size-50">
-                  </div>
-                  <div class="product-info">
-                    <a href="javascript:void(0)" class="product-title">{{ $product->name }}
-                      <span class="badge badge-warning float-right">#{{ $product->price }}</span></a>
-                    <span class="product-description">
-                      {{ substr($product->description, 100) }}
-                    </span>
-                  </div>
-                </li>
-                <!-- /.item -->
-              @endforeach
-              
-            </ul>
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer text-center">
-            <a href="{{ route('products.index') }}" class="uppercase">View All Products</a>
-          </div>
-          <!-- /.card-footer -->
+          <!-- /.card -->
         </div>
-        <!-- /.card -->
-      </div>
+      @endif
+      
       <!-- /.col -->
     </div>
     <!-- /.row -->
