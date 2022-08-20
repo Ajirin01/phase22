@@ -42,6 +42,7 @@
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
+        
         <li class="nav-item">
           <a style="border-radius: 50px; color: white" class="btn btn-warning btn-sm nav-link" role="button" onclick="history.back()">Back</a>
         </li>

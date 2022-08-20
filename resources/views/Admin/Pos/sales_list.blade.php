@@ -32,9 +32,9 @@
                   <thead>
                   <tr>
                     <th>Sale Code</th>
-                    {{-- <th>Wholesale Stock</th> --}}
                     <th>Total Amount</th>
                     <th>Payment Method</th>
+                    <th>Sale Type</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -45,6 +45,7 @@
                         <td>{{$sale->sale_number}}</td>
                         <td>{{$sale->total - $sale->discount}}</td>
                         <td>{{$sale->payment_method}}</td>
+                        <td>{{$sale->sale_type}}</td>
                         <td>{{$sale->status}}</td>
                         <td>
                             <form action="{{ route('sales.destroy', $sale->id) }}" method="post" id="sale-id{{$sale->id}}">
@@ -74,9 +75,10 @@
                   </tbody>
                   <tfoot>
                   <tr>
-                    <th>Product Nanme</th>
-                    <th>Wholesale Stock</th>
-                    <th>Stock</th>
+                    <th>Sale Code</th>
+                    <th>Total Amount</th>
+                    <th>Payment Method</th>
+                    <th>Sale Type</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>

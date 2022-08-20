@@ -43,6 +43,9 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
+          <a class="nav-link text-primary" data-widget="control-sidebar" data-slide="true" href="#" role="button"><span>{{strtoupper(Session::get('sale_type'))}}</span></a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
               class="fas fa-th-large"></i></a>
         </li>
@@ -355,7 +358,7 @@
         <!-- /.info-box -->
       </div> --}}
       <!-- /.col -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
           <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
@@ -387,7 +390,7 @@
       <!-- fix for small devices only -->
       <div class="clearfix hidden-md-up"></div>
 
-      <div class="col-12 col-sm-6 col-md-4">
+      <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
           <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
@@ -399,8 +402,39 @@
         </div>
         <!-- /.info-box -->
       </div>
+
+      @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'retail')
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Retail Sales</span>
+              <span class="info-box-number">{{ count(($sales_retail)) }}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+      @endif
+
+      @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'wholesale')
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Wholesale Sales</span>
+              <span class="info-box-number">{{ count(($sales_wholesale)) }}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+      @endif
+
       <!-- /.col -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
           <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
 
@@ -443,8 +477,23 @@
                         echo "<strong>Sales:   </strong>";
                       }
                   @endphp
+                  
+                  @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'retail')
+                  <span class="text-danger">Total with wholesale:</span> <strong>N {{ $sales_total }}.00</strong>  | <span class="text-danger">Retail Total:</span> <strong>N {{ $sales_total_retail }}.00</strong>  
+                  @endif
 
-                  <strong>N {{ $sales_total }}.00</strong>
+                  @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'wholesale')
+                     <span class="text-danger">Total with retail:</span> <strong>N {{ $sales_total }}.00</strong>  | <span class="text-danger">Wholeseles Total:</span> <strong>N {{ $sales_total_wholesale }}.00</strong>  
+                  @endif
+
+                  @if (Auth::user()->role != 'admin' && Session::get('sale_type') == 'retail')
+                    <span class="text-danger">Retail Total:</span> <strong>N {{ $sales_total_retail }}.00</strong>  
+                  @endif
+
+                  @if (Auth::user()->role != 'admin' && Session::get('sale_type') == 'wholesale')
+                     <span class="text-danger">Wholeseles Total:</span> <strong>N {{ $sales_total_wholesale }}.00</strong>  
+                  @endif
+
 
                 </p>
 

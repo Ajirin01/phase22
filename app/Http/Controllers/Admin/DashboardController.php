@@ -32,7 +32,24 @@ class DashboardController extends Controller
         $orders = Order::all();
         // $products = Product::all();
         // $jan_sale = Sale::where();
-        $sales = Sale::where('status', 'confirmed')->get();
+
+        $latest_products = Product::orderBy('id', 'desc')->take(10)->get();
+
+        // $sales = Sale::all();
+        $carts = Cart::all();
+        $users = User::where('role', 'user')->get();
+        
+        // sales by role
+        if(Auth::user()->role == 'retail rep'){
+            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'wholesale rep'){
+            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
+        }else if(Auth::user()->role == 'admin'){
+            $sales_retail = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
+            $sales_wholesale = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
+            $sales = Sale::where('status', 'confirmed')->get();
+        }
+        
         $month_sale = [];
         $months = [];
         $month_sale[0] = [];
@@ -74,30 +91,11 @@ class DashboardController extends Controller
             }
             
         }
+
+        $dis = DashboardController::getSaleTotal($sales);
+        $dis_retail = DashboardController::getSaleTotal($sales_retail);
+        $dis_wholesale = DashboardController::getSaleTotal($sales_wholesale);
         
-
-        $latest_products = Product::orderBy('id', 'desc')->take(10)->get();
-
-        // $sales = Sale::all();
-        $carts = Cart::all();
-        $users = User::where('role', 'user')->get();
-        
-
-        $dis = 0;
-        for ($i=0; $i < count($sales); $i++) { 
-            $total = $sales[$i]->total;
-            $discount = $sales[$i]->discount;
-            $dis = $dis + ($total - $discount);
-        }
-
-        // sales by role
-        if(Auth::user()->role == 'retail rep'){
-            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'wholesale rep'){
-            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'admin rep'){
-            $sales = Sale::orderBy('id', 'desc')->get();
-        }
         
         // return response()->json(Carbon::parse($sales[16]->created_at)->month);
         return view('Admin.dashboard',['latest_orders'=> $latest_orders,
@@ -105,7 +103,22 @@ class DashboardController extends Controller
                     'sales'=> $sales, 'total_orders'=> $orders,
                     'users'=> $users, 'months'=> $months_array,
                     'sales_total'=> $dis,
-                    'sale_recap'=> $sale_recap
+                    'sale_recap'=> $sale_recap,
+                    'sales_retail'=> $sales_retail,
+                    'sales_wholesale'=> $sales_wholesale,
+                    'sales_total_retail'=> $dis_retail,
+                    'sales_total_wholesale'=> $dis_wholesale
                 ]);
+    }
+
+    private function getSaleTotal($sales){
+        $dis = 0;
+        for ($i=0; $i < count($sales); $i++) { 
+            $total = $sales[$i]->total;
+            $discount = $sales[$i]->discount;
+            $dis = $dis + ($total - $discount);
+        }
+
+        return $dis;
     }
 }

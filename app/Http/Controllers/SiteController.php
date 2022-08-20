@@ -27,7 +27,7 @@ class SiteController extends Controller
         if(Session::get("shopping_type") == "wholesale"){
             $products = Product::where('status', 'Active')->where('wholesale','on')->paginate(20);
         }else{
-            $products = Product::where('status', 'Active')->paginate(20);
+            $products = Product::where('status', 'Active')->where('wholesale','off')->paginate(20)->paginate(20);
         }
         return view('shop',['products'=> $products]);
     }
@@ -120,7 +120,7 @@ class SiteController extends Controller
 
     public function shopping_setting(Request $request){
         // return response()->json($request->shopping_type);
-        Session::put('shopping_type', $request->shopping_type);
+        Session::put('sale_type', $request->shopping_type);
         // return response()->json(Session::get('shopping_type'));
 
         return redirect()->back();

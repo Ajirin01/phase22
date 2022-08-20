@@ -28,7 +28,7 @@ class SalesController extends Controller
             $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
         }else if(Auth::user()->role == 'wholesale rep'){
             $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'admin rep'){
+        }else if(Auth::user()->role == 'admin'){
             $sales = Sale::orderBy('id', 'desc')->get();
         }
 
