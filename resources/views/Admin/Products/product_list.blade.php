@@ -46,7 +46,7 @@
                         <td>
                           {{Session::get('sale_type') == 'retail' ? $product->stock : $product->wholesale_stock}}
                           @if((Session::get('sale_type') == 'retail' ? $product->stock : $product->wholesale_stock) < 5)
-                            (<span style="color: red">stock level very low</span>)
+                            (<span style="color: red">stock level below 5</span>)
                           @endif
                         </td>
                         <td>{{$product->status}}</td>
