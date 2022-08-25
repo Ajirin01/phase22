@@ -81,33 +81,59 @@
                           <input type="text" class="form-control" name="name" placeholder="Enter Product Name">
                       </div>
                   </div>
-                  <div class="mb-3">
-                      <div class="form-group">
-                          <label>Product Price</label>
-                          <input type="text" class="form-control" name="price" placeholder="Enter Product Price">
+
+                  <div class="card card-outline card-info">
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        Please Click the Plus "+" sign on the right to fill retail details if Retail sale is available
+                      </h3>
+                      <!-- tools box -->
+                      <div class="card-tools">
+                        <button type="button" id="reveal-retail" class="btn btn-tool btn-sm" data-card-widget="collapse" data-toggle="tooltip"
+                                title="Collapse">
+                          <i class="fas fa-minus"></i>
+                        </button>
                       </div>
+                      <!-- /. tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    
+                    <div class="card-body pad">
+                      <div class="mb-3">
+                        <div class="form-group">
+                            <label>Product Price</label>
+                            <input type="number" class="form-control" name="price" min="0" placeholder="Enter Product Price">
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label>Product Size</label><br>
+                          <div class="input-group">
+                              <input type="text" class="form-control" name="size" placeholder="Enter Product Size">
+                              <select name="retail_quantity" class="form-control">
+                                <option value="Carton">Carton</option>
+                                <option value="Schacet">Schacet</option>
+                              </select>
+                            </div>
+                      </div>
+                      <div class="mb-3">
+                        <div class="form-group">
+                            <label>Stock</label>
+                            <input type="number" class="form-control" name="stock" min="0">
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="md-3">
-                      <label for="exampleInputFile">Product Image</label>
-                      <div class="input-group">
-                        <div class="custom-file">
-                          <input type="file" name="image" class="custom-file-input" id="exampleInputFile">
-                          <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
+                    <label for="exampleInputFile">Product Image</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" name="image" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                       </div>
+                    </div>
                   </div>
                   <div class="mb-3">
-                    <label>Product Size</label><br>
-                      <div class="input-group">
-                          <input type="text" class="form-control" name="size" placeholder="Enter Product Size">
-                          <select name="retail_quantity" class="form-control">
-                            <option value="Carton">Carton</option>
-                            <option value="Schacet">Schacet</option>
-                          </select>
-                        </div>
-                  </div>
-                  <div class="mb-3">
-                      <label>Please check if wholesale is available</label><br>
+                      <label>Please check if wholesale is available AND fill price, stock and size for wholesale</label><br>
                       <div class="input-group">
                           <div class="input-group-prepend">
                               <span class="input-group-text">
@@ -120,7 +146,7 @@
                               <option value="Carton">Carton</option>
                               <option value="Schacet">Schacet</option>
                           </select>
-                          <input name="wholesale_stock" type="text" placeholder="wholesale stock" class="form-control">
+                          <input name="wholesale_stock" type="number" min="0" placeholder="wholesale stock" class="form-control">
                           <select name="wholasale_stock_quantity" class="form-control">
                               <option value="Carton">Carton</option>
                               <option value="Schacet">Schacet</option>
@@ -134,12 +160,6 @@
                               <option value="0">No</option>
                               <option value="1">Yes</option>
                           </select>
-                      </div>
-                  </div>
-                  <div class="mb-3">
-                      <div class="form-group">
-                          <label>Stock</label>
-                          <input type="text" class="form-control" name="stock" placeholder="Enter ...">
                       </div>
                   </div>
                   <div class="mb-3">

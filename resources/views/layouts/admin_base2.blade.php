@@ -422,6 +422,9 @@
 
     });
 
+    $(document).ready(function(){
+      document.getElementById('reveal-retail').click()
+    })
   </script>
 </body>
 </html>

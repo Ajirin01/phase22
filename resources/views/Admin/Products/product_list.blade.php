@@ -8,7 +8,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
               <li class="breadcrumb-item active">Products</li>
             </ol>
           </div>
@@ -32,7 +32,7 @@
                   <thead>
                   <tr>
                     <th>Product Nanme</th>
-                    <th>Wholesale Stock</th>
+                    {{-- <th>Wholesale Stock</th> --}}
                     <th>Stock</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -42,8 +42,13 @@
                     @foreach ($products as $product)
                     <tr>
                         <td>{{$product->name}}</td>
-                        <td>{{$product->wholesale_stock}}</td>
-                        <td>{{$product->stock}}</td>
+                        {{-- <td>{{$product->wholesale_stock}}</td> --}}
+                        <td>
+                          {{Session::get('sale_type') == 'retail' ? $product->stock : $product->wholesale_stock}}
+                          @if((Session::get('sale_type') == 'retail' ? $product->stock : $product->wholesale_stock) < 5)
+                            (<span style="color: red">stock level very low</span>)
+                          @endif
+                        </td>
                         <td>{{$product->status}}</td>
                         <td>
                             <a class="btn" href="{{ route('products.edit', $product->id) }}">
@@ -73,7 +78,7 @@
                   <tfoot>
                   <tr>
                     <th>Product Nanme</th>
-                    <th>Wholesale Stock</th>
+                    {{-- <th>Wholesale Stock</th> --}}
                     <th>Stock</th>
                     <th>Status</th>
                     <th>Actions</th>

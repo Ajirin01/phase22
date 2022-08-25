@@ -16,17 +16,17 @@ use Session;
 class DashboardController extends Controller
 {
     public function dashboard(){
-        $shopping_type = Session::get('shopping_type');
-        // echo $shopping_type == null;
+        $sale_type = Session::get('sale_type');
+        // echo $sale_type == null;
         // exit;
         $products = Product::all();
 
-        if($shopping_type == null){
-            Session::put('shopping_type','retail');
+        if($sale_type == null){
+            Session::put('sale_type','retail');
         }else {
             ;
         }
-        // return response()->json(Session::get('shopping_type'));
+        // return response()->json(Session::get('sale_type'));
 
         $latest_orders = Order::orderBy('id', 'desc')->take(7)->get();
         $orders = Order::all();
@@ -40,15 +40,9 @@ class DashboardController extends Controller
         $users = User::where('role', 'user')->get();
         
         // sales by role
-        if(Auth::user()->role == 'retail rep'){
-            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'wholesale rep'){
-            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'admin'){
-            $sales_retail = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
-            $sales_wholesale = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-            $sales = Sale::where('status', 'confirmed')->get();
-        }
+        $sales_retail = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
+        $sales_wholesale = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
+        $sales = Sale::where('status', 'confirmed')->get();
         
         $month_sale = [];
         $months = [];

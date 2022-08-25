@@ -27,17 +27,53 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         // return response()->json($request->all());
-        $rule = [
-            'category'=> 'required',
-            'brand'=> 'required',
-            'name'=> 'required| min:3| max: 191',
-            'price'=> 'required| integer',
-            'size'=> 'required',
-            'description'=> 'required| min: 5| max: 1000',
-            'prescription'=> 'required',
-            'stock'=> 'required| integer',
-            'shipping_price'=> 'required| integer',
-        ];
+
+        if((empty($request->price) && empty($request->size)) && $request->wholesale == "on"){
+            $rule = [
+                'category'=> 'required',
+                'brand'=> 'required',
+                'name'=> 'required| min:3| max: 191',
+                'description'=> 'required| min: 5| max: 1000',
+                'prescription'=> 'required',
+                'shipping_price'=> 'required| integer',
+                'wholesale_price'=> 'required',
+                'wholesale_stock'=> 'required',
+                'wholesale_size'=> 'required'
+            ];
+
+            $price = $request->price;
+            $size = $request->size;
+            
+        }else if((!empty($request->price) || !empty($request->size) && $request->wholesale == "of")){
+            $rule = [
+                'category'=> 'required',
+                'brand'=> 'required',
+                'name'=> 'required| min:3| max: 191',
+                'price'=> 'required| integer',
+                'size'=> 'required',
+                'description'=> 'required| min: 5| max: 1000',
+                'prescription'=> 'required',
+                'stock'=> 'required| integer',
+                'shipping_price'=> 'required| integer',
+            ];
+        }else if((!empty($request->price) || !empty($request->size) && $request->wholesale == "on")){
+            $rule = [
+                'category'=> 'required',
+                'brand'=> 'required',
+                'name'=> 'required| min:3| max: 191',
+                'price'=> 'required| integer',
+                'size'=> 'required',
+                'description'=> 'required| min: 5| max: 1000',
+                'prescription'=> 'required',
+                'stock'=> 'required| integer',
+                'shipping_price'=> 'required| integer',
+                'wholesale_price'=> 'required',
+                'wholesale_stock'=> 'required',
+                'wholesale_size'=> 'required'
+            ];
+        }
+
+
 
         $valid = Validator::make($request->all(),$rule);
 

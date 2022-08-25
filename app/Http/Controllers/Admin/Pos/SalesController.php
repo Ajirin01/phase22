@@ -40,7 +40,12 @@ class SalesController extends Controller
     public function create()
     {
         $sale_number = $this->sale_number();
-        $products = Product::all();
+        if(Session::get('sale_type') == 'retail'){
+            $products = Product::where('price', '!=', null)->where('status','active')->get();
+        }else{
+            $products = Product::where('wholesale', 'on')->where('status','active')->get();
+        }
+        
         return view('Admin.Pos.add_product_to_sell',['products' => $products, 'sale_number'=> $sale_number]);
     }
 
@@ -158,7 +163,7 @@ class SalesController extends Controller
 
         if($create_sale){
             foreach (json_decode($request->cart) as $cart) {
-                if(Session::get('shopping_type') == 'wholesale'){ 
+                if(Session::get('sale_type') == 'wholesale'){ 
                     $product = Product::find($cart->product_id);
     
                     $initial_stock = $product->wholesale_stock;
