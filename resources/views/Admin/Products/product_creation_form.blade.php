@@ -110,8 +110,19 @@
                           <div class="input-group">
                               <input type="text" class="form-control" name="size" placeholder="Enter Product Size">
                               <select name="retail_quantity" class="form-control">
-                                <option value="Carton">Carton</option>
-                                <option value="Schacet">Schacet</option>
+                                <option value="sachet">sachet</option>
+                                <option value="bottle">bottle</option>
+                                <option value="card">card</option>
+                                <option value="ampoule">ampoule</option>
+                                <option value="tube">tube</option>
+                                <option value="pack">pack</option>
+                                <option value="tablet">tablet</option>
+                                <option value="box">box</option>
+                                <option value="tin">tin</option>
+                                <option value="piece(s)">piece(s)</option>
+                                <option value="infusion">infusion</option>
+                                <option value="vail">vail</option>
+                                <option value="capsule">capsule</option>
                               </select>
                             </div>
                       </div>
@@ -143,13 +154,35 @@
                           <input name="wholesale_price" type="text" placeholder="wholesale price" class="form-control">
                           <input name="wholesale_size" type="text" placeholder="wholesale size" class="form-control">
                           <select name="wholasale_quantity" class="form-control">
-                              <option value="Carton">Carton</option>
-                              <option value="Schacet">Schacet</option>
+                            <option value="sachet">sachet</option>
+                            <option value="bottle">bottle</option>
+                            <option value="card">card</option>
+                            <option value="ampoule">ampoule</option>
+                            <option value="tube">tube</option>
+                            <option value="pack">pack</option>
+                            <option value="tablet">tablet</option>
+                            <option value="box">box</option>
+                            <option value="tin">tin</option>
+                            <option value="piece(s)">piece(s)</option>
+                            <option value="infusion">infusion</option>
+                            <option value="vail">vail</option>
+                            <option value="capsule">capsule</option>
                           </select>
                           <input name="wholesale_stock" type="number" min="0" placeholder="wholesale stock" class="form-control">
                           <select name="wholasale_stock_quantity" class="form-control">
-                              <option value="Carton">Carton</option>
-                              <option value="Schacet">Schacet</option>
+                            <option value="sachet">sachet</option>
+                            <option value="bottle">bottle</option>
+                            <option value="card">card</option>
+                            <option value="ampoule">ampoule</option>
+                            <option value="tube">tube</option>
+                            <option value="pack">pack</option>
+                            <option value="tablet">tablet</option>
+                            <option value="box">box</option>
+                            <option value="tin">tin</option>
+                            <option value="piece(s)">piece(s)</option>
+                            <option value="infusion">infusion</option>
+                            <option value="vail">vail</option>
+                            <option value="capsule">capsule</option>
                           </select>
                       </div>
                   </div>
