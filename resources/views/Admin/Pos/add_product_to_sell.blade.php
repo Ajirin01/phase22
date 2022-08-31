@@ -46,7 +46,7 @@
                             <tr> 
                                 <td>{{$product->id}} <input id="product-id{{$product->id}}" type="hidden"  value="{{$product->id}}"></td>
                                 <td>{{$product->name}} <input id="product-name{{$product->id}}" type="hidden"  value="{{$product->name}}"></td>
-                                <td width="100px"><input id="product-quantity{{$product->id}}" class="form-control" min="0" type="number"  id="" onchange="getQuantity({{$product->id}})" value="1"></td>
+                                <td width="100px"><input id="product-quantity{{$product->id}}" class="form-control" min="1" type="number"  id="" onchange="getQuantity({{$product->id}})" value="1" required></td>
                                 <td>
                                   {{Session::get('sale_type') == 'retail'? $product->price : $product->wholesale_price}} 
                                   <input id="product-price{{$product->id}}" type="hidden"  value="{{Session::get('sale_type') == 'retail'? $product->price : $product->wholesale_price}}">

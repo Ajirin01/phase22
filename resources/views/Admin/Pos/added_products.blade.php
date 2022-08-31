@@ -75,7 +75,7 @@
                                   <td>{{$cart['product_id']}} <input type="hidden" name="product_id[]" value="{{$cart['product_id']}}"> </td>
                                   <td>{{$cart['product_name']}} <input type="hidden" name="product_name[]" value="{{$cart['product_name']}}"> </td>
                                   <td>{{$cart['product_price']}} <input type="hidden" name="product_price[]" value="{{$cart['product_price']}}"> </td>
-                                  <td> <input class="form-control" min="0" value="{{$cart['product_quantity']}}" type="number" name="product_quantity[]"> </td>
+                                  <td> <input class="form-control" min="1" value="{{$cart['product_quantity']}}" type="number" name="product_quantity[]" required> </td>
                                   <td>{{$cart['product_price'] * $cart['product_quantity']}}</td>
                                 </tr>
                               @endforeach
