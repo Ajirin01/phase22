@@ -408,6 +408,7 @@
       });
       var sus = {!! json_encode(session('success')) !!}
       var errors = {!! json_encode(session('errors')) !!}
+      var error = {!! json_encode(session('error')) !!}
       // var success = {!! (session('success')) !!} 
       
       // console.log(success !== null)
@@ -418,6 +419,8 @@
         @endforeach
       }else if(sus !== null){
           toastr.success(sus)
+      }else if(error !== null){
+          toastr.error(error)
       }
 
     });

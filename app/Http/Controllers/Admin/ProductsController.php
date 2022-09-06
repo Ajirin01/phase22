@@ -37,6 +37,7 @@ class ProductsController extends Controller
                 'prescription'=> 'required',
                 'shipping_price'=> 'required| integer',
                 'wholesale_price'=> 'required',
+                
                 'wholesale_stock'=> 'required',
                 'wholesale_size'=> 'required'
             ];
@@ -50,6 +51,7 @@ class ProductsController extends Controller
                 'brand'=> 'required',
                 'name'=> 'required| min:3| max: 191',
                 'price'=> 'required| integer',
+                
                 'size'=> 'required',
                 'description'=> 'required| min: 5| max: 1000',
                 'prescription'=> 'required',
@@ -62,6 +64,23 @@ class ProductsController extends Controller
                 'brand'=> 'required',
                 'name'=> 'required| min:3| max: 191',
                 'price'=> 'required| integer',
+                
+                'size'=> 'required',
+                'description'=> 'required| min: 5| max: 1000',
+                'prescription'=> 'required',
+                'stock'=> 'required| integer',
+                'shipping_price'=> 'required| integer',
+                'wholesale_price'=> 'required',
+                'wholesale_stock'=> 'required',
+                'wholesale_size'=> 'required'
+            ];
+        }else{
+            $rule = [
+                'category'=> 'required',
+                'brand'=> 'required',
+                'name'=> 'required| min:3| max: 191',
+                'price'=> 'required| integer',
+                
                 'size'=> 'required',
                 'description'=> 'required| min: 5| max: 1000',
                 'prescription'=> 'required',
@@ -79,52 +98,70 @@ class ProductsController extends Controller
 
         if($valid->fails()){
             // return response()->json($valid->errors());
-            return redirect()->back()->with('errors',$valid->errors());
+            return redirect()->back()->withInput($request->all())->with('errors',$valid->errors());
         }else{
+            $brand = Brand::where('name', $request->brand)->first();
+            $category = Category::where('name', $request->category)->first();
+
+            $data = array();
+            $data['name'] = $request->name;
+            $data['price'] = $request->price;
+            $data['description'] = $request->description;
+            $data['sale_type'] = $request->sale_type;
+            $data['brand_id'] = $brand->id;
+            $data['category_id'] = $category->id;
+            
+            if($request->status == "on"){
+                $data['status'] = "Active";
+            }else{
+                $data['status'] = "Inactive";
+            }
+            $data['size'] = $request->size." ".$request->retail_quantity;
+            $data['prescription'] = $request->prescription;
+            if($request->wholesale == "on"){
+                $data['wholesale'] = $request->wholesale;
+                $data['wholesale_size'] = $request->wholesale_size." ".$request->wholesale_quantity;
+                $data['wholesale_price'] = $request->wholesale_price;
+                $data['wholesale_stock'] = $request->wholesale_stock." ".$request->wholesale_stock_quantity;
+            }
+            $data['stock'] = $request->stock;
+            $data['shipping_cost'] = $request->shipping_price;
+
             if($request->hasFile('image')){
                 $image_file = $request->file('image');
                 $image_exe = $image_file->getClientOriginalExtension();
                 $image_name = rand(123456789,999999999).'.'.$image_exe;
                 $upload_path = public_path('uploads/');
                 
-                $brand = Brand::where('name', $request->brand)->first();
-                $category = Category::where('name', $request->category)->first();
-
-                $data = array();
-                $data['name'] = $request->name;
-                $data['price'] = $request->price;
-                $data['description'] = $request->description;
-                $data['sale_type'] = $request->sale_type;
-                $data['brand_id'] = $brand->id;
-                $data['category_id'] = $category->id;
                 
-                if($request->status == "on"){
-                    $data['status'] = "Active";
-                }else{
-                    $data['status'] = "Inactive";
-                }
-                $data['size'] = $request->size." ".$request->retail_quantity;
-                $data['prescription'] = $request->prescription;
-                if($request->wholesale == "on"){
-                    $data['wholesale'] = $request->wholesale;
-                    $data['wholesale_size'] = $request->wholesale_size." ".$request->wholesale_quantity;
-                    $data['wholesale_price'] = $request->wholesale_price;
-                    $data['wholesale_stock'] = $request->wholesale_stock." ".$request->wholesale_stock_quantity;
-                }
-                $data['stock'] = $request->stock;
-                $data['shipping_cost'] = $request->shipping_price;
                 $data['image'] = $image_name;
 
+                $product_exit = Product::where('name', $request->name)->first();
+                if(!empty($product_exit)){
+                    return redirect()->back()->with('error', 'product name already exists');
+                }
                 $create_product = Product::create($data);
 
                 if($create_product){
                     $image_file->move($upload_path, $image_name);
                     return redirect()->back()->with('success','record created!');
                 }else{
-                    return redirect()->back()->with('errors','could not create record');
+                    return redirect()->back();
                 }
             }else{
-                return redirect()->back()->with('errors','product image is required');
+                $product_exit = Product::where('name', $request->name)->first();
+                if(!empty($product_exit)){
+                    return redirect()->back()->with('error', 'product name already exists');
+                }
+                $data['image'] = "no-image.png";
+
+                $create_product = Product::create($data);
+
+                if($create_product){
+                    return redirect()->back()->with('success','record created!');
+                }else{
+                    return redirect()->back();
+                }
             }
         }
     }
@@ -160,12 +197,7 @@ class ProductsController extends Controller
             'category'=> 'required',
             'brand'=> 'required',
             'name'=> 'required| min:3| max: 191',
-            'price'=> 'required| integer',
-            'size'=> 'required',
             'description'=> 'required| min: 5| max: 1000',
-            'prescription'=> 'required',
-            'stock'=> 'required| integer',
-            'shipping_price'=> 'required| integer',
         ];
         
         $valid = Validator::make($request->all(),$rule);

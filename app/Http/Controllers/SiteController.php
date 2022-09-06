@@ -27,7 +27,7 @@ class SiteController extends Controller
         if(Session::get("shopping_type") == "wholesale"){
             $products = Product::where('status', 'Active')->where('wholesale','on')->paginate(20);
         }else{
-            $products = Product::where('status', 'Active')->where('wholesale','off')->paginate(20)->paginate(20);
+            $products = Product::where('status', 'Active')->where('price','!=', null)->paginate(20);
         }
         return view('shop',['products'=> $products]);
     }
