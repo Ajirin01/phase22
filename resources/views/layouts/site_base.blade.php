@@ -3,7 +3,7 @@
     $brands = App\Brand::where('status','Active')->get();
 
     if(Auth::check()){
-        if(Session::get('shopping_type') == 'wholesale'){
+        if(Session::get("sale_type") == 'wholesale'){
             $cart = App\Cart::where('shopping_type','wholesale')->where('user_id', Auth::user()->id)->get();
         }else{
             $cart = App\Cart::where('shopping_type', 'retail')->where('user_id', Auth::user()->id)->get();
@@ -22,9 +22,9 @@
         }
     }
     
-    $wholesale = Session::get('shopping_type') == 'wholesale';
-    $retail = Session::get('shopping_type') == 'retail';
-    $empty = Session::get('shopping_type') == null;
+    $wholesale = Session::get("sale_type") == 'wholesale';
+    $retail = Session::get("sale_type") == 'retail';
+    $empty = Session::get("sale_type") == null;
 @endphp
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -311,11 +311,16 @@
                                             </li>
                                             <li><a href="{{ route('contact-us') }}">Contact us</a></li>
                                             <li>
-                                                <form  action="{{ route('shopping-setting') }}" method="post" id="shopping-form">
+                                                <form  action="{{ route('shopping-setting') }}" id="shopping-setting" method="post" id="shopping-form">
                                                     @csrf
                                                     <select name="shopping_type" id="shopping-type">
-                                                        <option value="{{$wholesale || $empty ? 'wholesale' : 'retail'}}">{{$wholesale || $empty  ? 'wholesale' : 'retail'}}</option>
-                                                        <option value="{{$retail ? 'wholesale' : 'retail'}}">{{$retail ? 'wholesale' : 'retail'}}</option>
+                                                        @if (Session::get('sale_type') == null || Session::get('sale_type') == 'retail')
+                                                            <option value="retail">retail</option>
+                                                            <option value="wholesale">wholesale</option>
+                                                        @else
+                                                            <option value="wholesale">wholesale</option>
+                                                            <option value="retail">retail</option>
+                                                        @endif
                                                     </select>
                                                     <button style="background-color: #d8373e; color: white; font-weight: 600" class="btn" id="mc-submit">set</button>
                                                 </form>
@@ -381,7 +386,7 @@
                                 <div class="newsletter__icon">
                                     <i class="fa fa-shopping-cart"></i>
                                 </div>
-                                @if (Session::get('shopping_type') == "wholesale")
+                                @if (Session::get("sale_type") == "wholesale")
                                     <div class="newsletter__content">
                                         <h3>Want to shop Retail?</h3>
                                         {{-- <p>Duis autem vel eum iriureDuis autem vel eum</p> --}}
@@ -395,7 +400,7 @@
                                 
                             </div>
                             <div class="newsletter__box">
-                                @if (Session::get('shopping_type') == "wholesale")
+                                @if (Session::get("sale_type") == "wholesale")
                                     <form action="{{ route('shopping-setting') }}" method="POST">
                                         @csrf
                                         <input name="shopping_type" value="retail" style="opacity: 0" type="text" id="mc-email" autocomplete="off" placeholder="wholesale">

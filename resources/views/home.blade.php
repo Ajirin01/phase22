@@ -76,7 +76,7 @@
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-6 order-2 order-md-3">
                       <div class="img-container img-full fix">
-                        @if (Session::get('shopping_type') == "wholesale")
+                        @if (Session::get("sale_type") == "wholesale")
                             <form id="type-form" style="display: none" action="{{ route('shopping-setting') }}" method="POST">
                                 @csrf
                                 <input name="shopping_type" value="retail" style="opacity: 0" type="text" id="mc-email" autocomplete="off" placeholder="wholesale">
@@ -120,7 +120,7 @@
                               <div class="deals-carousel-active slick-padding slick-arrow-style">
                                   <!-- product single item start -->
                                   @foreach ($hot_deals as $product)
-                                    @if (Session::get('shopping_type') == "wholesale")
+                                    @if (Session::get("sale_type") == "wholesale")
                                         <div class="product-item fix">
                                             <div class="product-thumb">
                                                 <a href="{{ route('product-details', $product->name) }}">
@@ -213,7 +213,7 @@
                           <div class="featured-carousel-active slick-padding slick-arrow-style">
                               <!-- product single item start -->
                               @foreach ($new_arrival as $product)
-                                @if (Session::get('shopping_type') == "wholesale")
+                                @if (Session::get("sale_type") == "wholesale")
                                     <div class="product-item fix">
                                         <div class="product-thumb">
                                             <a href="{{ route('product-details', $product->name) }}">
@@ -301,7 +301,7 @@
                                       </div> <!-- section title end -->
                                       <div class="category-carousel-active row" data-row="4">
                                         @foreach ($latest_products as $product)
-                                            @if (Session::get('shopping_type') == "wholesale")
+                                            @if (Session::get("sale_type") == "wholesale")
                                                 <div class="col">
                                                     <div class="category-item">
                                                         <div class="category-thumb">
@@ -360,7 +360,7 @@
                                       </div> <!-- section title end -->
                                       <div class="category-carousel-active row" data-row="4">
                                           @foreach ($hot_sales as $product)
-                                            @if (Session::get('shopping_type') == "wholesale")
+                                            @if (Session::get("sale_type") == "wholesale")
                                                 <div class="col">
                                                     <div class="category-item">
                                                         <div class="category-thumb">
@@ -413,4 +413,56 @@
           </div>
       </div>
       <!-- page wrapper end -->
+
+
+    
+
+    {{-- <a href="#" style="display: none"  data-toggle="modal" id="model2" data-target="#sale_type_switch"> <span data-toggle="tooltip" data-placement="left" title="sale_type_switch"><i class="fa fa-search"></i></span> </a>
+
+    @php
+        echo "<script>document.getElementById('model2').click()</script>";
+    @endphp
+
+    <!-- Quick view modal start -->
+    <div class="modal" id="sale_type_switch">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    hello
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quick view modal end --> --}}
+    @if ((Session::get("sale_type") == null) && !Session::get('remember_setting'))
+        <script>
+            confirm("You are shopping retail mode, want to switch to Wholesale? You can always switch mode from the option on Navigation bar")
+            document.getElementById("shopping-type").value = 'retail'
+            document.getElementById("shopping-setting").submit()
+        </script>
+        {{Session::put('remember_setting', true)}}
+    @endif
+
+    @if (Session::get("sale_type") == "retail" && !Session::get('remember_setting'))
+        <script>
+            confirm("You are shopping retail mode, want to switch to Wholesale? You can always switch mode from the option on Navigation bar")
+            document.getElementById("shopping-type").value = 'wholesale'
+            document.getElementById("shopping-setting").submit()
+        </script>
+        {{Session::put('remember_setting', true)}}
+    @endif
+
+    @if (Session::get("sale_type") == "wholesale" && !Session::get('remember_setting'))
+        <script>
+            confirm("You are shopping Wholesale mode, want to switch to Retail? You can always switch mode from the option on Navigation bar")
+            document.getElementById("shopping-type").value = 'retail'
+            document.getElementById("shopping-setting").submit()
+        </script>
+        {{Session::put('remember_setting', true)}}
+    @endif
+
+    
 @endsection

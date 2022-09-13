@@ -23,19 +23,19 @@ use Validator;
 class SiteController extends Controller
 {
     public function shop(){
-        $products = Product::where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
+        $products = Product::where('status', 'Active')->where('sale_mode', Session::get("sale_type"))->paginate(20);
         return view('shop',['products'=> $products]);
     }
 
     public function products_by_category($category){
         $category_data = Category::where('name', $category)->first();
-        $products_by_category = Product::where('category_id',$category_data->id)->where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
+        $products_by_category = Product::where('category_id',$category_data->id)->where('status', 'Active')->where('sale_mode', Session::get("sale_type"))->paginate(20);
         return view('products_by_category',['products_by_category'=> $products_by_category, 'category'=> $category]);
     }
 
     public function products_by_brand($brand){
         $brand_data = Brand::where('name', $brand)->first();
-        $products_by_brand = Product::where('brand_id', $brand_data->id)->where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
+        $products_by_brand = Product::where('brand_id', $brand_data->id)->where('status', 'Active')->where('sale_mode', Session::get("sale_type"))->paginate(20);
         return view('products_by_brand',['products_by_brand'=> $products_by_brand, 'brand'=>  $brand]);
     }
     
@@ -92,7 +92,7 @@ class SiteController extends Controller
     }
 
     public function cart(){
-        $carts = Cart::where('shopping_type', Session::get("shopping_type"))->where('user_id', Auth::user()->id)->get();
+        $carts = Cart::where('shopping_type', Session::get("sale_type"))->where('user_id', Auth::user()->id)->get();
         // return response()->json($carts);
         return view('cart', ['carts'=> $carts]);
     // return response()->json($user);
@@ -100,7 +100,7 @@ class SiteController extends Controller
 
     public function shopping_setting(Request $request){
         // return response()->json($request->shopping_type);
-        Session::put('shopping_type', $request->shopping_type);
+        Session::put('sale_type', $request->shopping_type);
         // return response()->json(Session::get('shopping_type'));
 
         return redirect()->back();
@@ -284,7 +284,7 @@ class SiteController extends Controller
 
         $products = Product::where('status', 'Active')
         ->where('name','like','%'.$search_query.'%')
-        ->where('sale_mode', Session::get("shopping_type"))->paginate(20);
+        ->where('sale_mode', Session::get("sale_type"))->paginate(20);
 
         return view('search_result',['products'=> $products]);
     }
