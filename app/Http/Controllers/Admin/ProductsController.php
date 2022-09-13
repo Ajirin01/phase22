@@ -8,12 +8,18 @@ use App\Product as Product;
 use App\Brand as Brand;
 use App\Category as Category;
 use Validator;
+use Session;
 
 class ProductsController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+            $products = Product::where('sale_mode', 'wholesale')->get();
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+            $products = Product::where('sale_mode', 'retail')->get();
+        }
+        
         return view('Admin.Products.product_list',['products' => $products]);
     }
     
@@ -21,78 +27,44 @@ class ProductsController extends Controller
     {
         $brands = Brand::all();
         $categories = Category::all();
-        return view('Admin.Products.product_creation_form', ['brands'=> $brands, 'categories'=> $categories]);
+
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+            $view = 'Admin.Products.asaba_product_creation_form';
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+            $view = 'Admin.Products.minna_product_creation_form';
+        }
+
+        return view($view, ['brands'=> $brands, 'categories'=> $categories]);
     }
     
     public function store(Request $request)
     {
         // return response()->json($request->all());
 
-        if((empty($request->price) && empty($request->size)) && $request->wholesale == "on"){
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
             $rule = [
-                'category'=> 'required',
-                'brand'=> 'required',
+                'category_id'=> 'required',
+                'brand_id'=> 'required',
                 'name'=> 'required| min:3| max: 191',
                 'description'=> 'required| min: 5| max: 1000',
-                'prescription'=> 'required',
-                'shipping_price'=> 'required| integer',
                 'wholesale_price'=> 'required',
-                
                 'wholesale_stock'=> 'required',
-                'wholesale_size'=> 'required'
+                'wholesale_size'=> 'required',
+                'wholesale_stock_quantity'=> 'required',
+                'wholesale_quantity'=> 'required'
             ];
-
-            $price = $request->price;
-            $size = $request->size;
             
-        }else if((!empty($request->price) || !empty($request->size) && $request->wholesale == "of")){
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
             $rule = [
-                'category'=> 'required',
-                'brand'=> 'required',
+                'category_id'=> 'required',
+                'brand_id'=> 'required',
                 'name'=> 'required| min:3| max: 191',
                 'price'=> 'required| integer',
-                
                 'size'=> 'required',
                 'description'=> 'required| min: 5| max: 1000',
-                'prescription'=> 'required',
-                'stock'=> 'required| integer',
-                'shipping_price'=> 'required| integer',
-            ];
-        }else if((!empty($request->price) || !empty($request->size) && $request->wholesale == "on")){
-            $rule = [
-                'category'=> 'required',
-                'brand'=> 'required',
-                'name'=> 'required| min:3| max: 191',
-                'price'=> 'required| integer',
-                
-                'size'=> 'required',
-                'description'=> 'required| min: 5| max: 1000',
-                'prescription'=> 'required',
-                'stock'=> 'required| integer',
-                'shipping_price'=> 'required| integer',
-                'wholesale_price'=> 'required',
-                'wholesale_stock'=> 'required',
-                'wholesale_size'=> 'required'
-            ];
-        }else{
-            $rule = [
-                'category'=> 'required',
-                'brand'=> 'required',
-                'name'=> 'required| min:3| max: 191',
-                'price'=> 'required| integer',
-                
-                'size'=> 'required',
-                'description'=> 'required| min: 5| max: 1000',
-                'prescription'=> 'required',
-                'stock'=> 'required| integer',
-                'shipping_price'=> 'required| integer',
-                'wholesale_price'=> 'required',
-                'wholesale_stock'=> 'required',
-                'wholesale_size'=> 'required'
+                'stock'=> 'required| integer'
             ];
         }
-
-
 
         $valid = Validator::make($request->all(),$rule);
 
@@ -103,29 +75,23 @@ class ProductsController extends Controller
             $brand = Brand::where('name', $request->brand)->first();
             $category = Category::where('name', $request->category)->first();
 
-            $data = array();
-            $data['name'] = $request->name;
-            $data['price'] = $request->price;
-            $data['description'] = $request->description;
-            $data['sale_type'] = $request->sale_type;
-            $data['brand_id'] = $brand->id;
-            $data['category_id'] = $category->id;
-            
+            $data = $request->all();
+
             if($request->status == "on"){
                 $data['status'] = "Active";
             }else{
                 $data['status'] = "Inactive";
             }
+
             $data['size'] = $request->size." ".$request->retail_quantity;
-            $data['prescription'] = $request->prescription;
+            $data['prescription'] = false;
             if($request->wholesale == "on"){
                 $data['wholesale'] = $request->wholesale;
                 $data['wholesale_size'] = $request->wholesale_size." ".$request->wholesale_quantity;
                 $data['wholesale_price'] = $request->wholesale_price;
                 $data['wholesale_stock'] = $request->wholesale_stock." ".$request->wholesale_stock_quantity;
             }
-            $data['stock'] = $request->stock;
-            $data['shipping_cost'] = $request->shipping_price;
+            $data['sale_mode'] = Session::get('sale_type');
 
             if($request->hasFile('image')){
                 $image_file = $request->file('image');
@@ -179,12 +145,18 @@ class ProductsController extends Controller
         $brands = Brand::all();
 
         $brand = Brand::find($product->brand_id);
-    $category = Category::find($product->category_id);
+        $category = Category::find($product->category_id);
 
         // echo json_encode($brand);
         // exit;
 
-        return view('Admin.Products.product_edit_form',['product'=> $product, 
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+            $view = 'Admin.Products.asaba_product_edit_form';
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+            $view = 'Admin.Products.minna_product_edit_form';
+        }
+
+        return view($view,['product'=> $product, 
         'categories'=> $categories, 'brands'=> $brands, 'category'=> $category, 'brand'=> $brand]);
     }
 
@@ -202,33 +174,16 @@ class ProductsController extends Controller
         
         $valid = Validator::make($request->all(),$rule);
 
-        $brand = Brand::find($request->brand);
-        $category = Category::find($request->category);
+        $brand = Brand::find($request->brand_id);
+        $category = Category::find($request->category_id);
 
-        $data = array();
-        $data['name'] = $request->name;
-        $data['price'] = $request->price;
-        $data['description'] = $request->description;
-        $data['sale_type'] = $request->sale_type;
-        $data['brand_id'] = $brand->id;
-        $data['category_id'] = $category->id;
-        
+        $data = $request->all();
+
         if($request->status == "on"){
             $data['status'] = "Active";
         }else{
             $data['status'] = "Inactive";
         }
-        $data['size'] = $request->size." ".$request->retail_quantity;
-        $data['prescription'] = $request->prescription;
-        if($request->wholesale == "on"){
-            $data['wholesale'] = $request->wholesale;
-            $data['wholesale_size'] = $request->wholesale_size." ".$request->wholesale_quantity;
-            $data['wholesale_price'] = $request->wholesale_price;
-            $data['wholesale_stock'] = $request->wholesale_stock." ".$request->wholesale_stock_quantity;
-        }
-        $data['stock'] = $request->stock;
-        $data['shipping_cost'] = $request->shipping_price;
-
         
         if($valid->fails()){
             // return response()->json($valid->errors());
@@ -245,6 +200,7 @@ class ProductsController extends Controller
                 $product_to_update = Product::find($id);
 
                 $update_product = $product_to_update->update($data);
+                $product_to_update->image = $image_name;
 
                 if($update_product){
                     $image_file->move($upload_path, $image_name);
@@ -259,14 +215,6 @@ class ProductsController extends Controller
                 return redirect()->back()->with('success','Product updated!');
             }
         }
-
-        // $update_product = $product_to_update->update($request->all());
-
-        // if($update_product){
-        //     return redirect()->back()->with('success', 'Product successfully updated!');
-        // }else{
-        //     return redirect()->back()->with('errors', 'Error! Product Could not update successfully');
-        // }
     }
     
     public function destroy($id)
@@ -281,5 +229,53 @@ class ProductsController extends Controller
         }else{
             return redirect()->back()->with('errors', 'Product could not delete successfully!');
         }return redirect()->back()->with('success', 'Product deleted!');
+    }
+
+
+    public function productBulkEditCreate(){
+        
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+            $products = Product::where('sale_mode', 'wholesale')->get();
+            $view = 'Admin.Products.asaba_product_bulk_edit_form';
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+            $products = Product::where('sale_mode', 'retail')->get();
+            $view = 'Admin.Products.minna_product_bulk_edit_form';
+        }
+
+        return view($view, ['products'=> $products]);
+    }
+
+    public function productBulkEditStoreMinna(Request $request){
+        $loop_count = count($request->checked);
+
+        for ($i=0; $i < $loop_count; $i++) { 
+            if($request->checked[$i] === "on"){
+                if($request->action === 'update'){
+                    Product::where('id', $request->id[$i])->update(['price'=> $request->price[$i], 'stock'=> $request->stock[$i], 'status'=> $request->status[$i]]);
+                }else{
+                    Product::where('id', $request->id[$i])->delete();
+                }
+            }
+        }
+        
+        return redirect()->back()->with('success', 'products successfully' . ($request->action === 'update' ? ' updated' : ' deleted'));
+    }
+
+    public function productBulkEditStoreAsaba(Request $request){
+        // return response()->json($request->all());
+        $loop_count = count($request->checked);
+
+        for ($i=0; $i < $loop_count; $i++) { 
+            if($request->checked[$i] === "on"){
+                if($request->action === 'update'){
+                    $stock = $request->wholesale_stock[$i] . " " . $request->wholesale_stock_quantity[$i];
+                    Product::where('id', $request->id[$i])->update(['wholesale_price'=> $request->wholesale_price[$i], 'wholesale_stock'=> $stock, 'status'=> $request->status[$i]]);
+                }else{
+                    Product::where('id', $request->id[$i])->delete();
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'products successfully' . ($request->action === 'update' ? ' updated' : ' deleted'));
     }
 }

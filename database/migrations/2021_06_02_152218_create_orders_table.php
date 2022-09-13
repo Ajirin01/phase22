@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->integer('order_number');
             $table->integer('order_total');
             $table->string('payment_method');
+            $table->string('sale_mode')->nullable();
             $table->longText('shipping_details');
             $table->longText('cart');
             $table->string('status')->default('pending');

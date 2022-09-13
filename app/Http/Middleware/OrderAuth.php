@@ -18,13 +18,14 @@ class OrderAuth
     {
         if(Auth::check()){
             if($request->user()->role == 'admin'||  
-                $request->user()->role == 'order manager'){
+                $request->user()->role == 'asaba order manager' || 
+                $request->user()->role == 'minna order manager'){
                 return $next($request);
             }else{
-                return redirect()->route('admin-login');
+                return redirect()->route('admin-login')->with('error', 'Access denied!');
             }
         }else{
-            return redirect()->route('admin-login');
+            return redirect()->route('admin-login')->with('error', 'Please login!');
         }
     }
 }

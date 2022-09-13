@@ -11,6 +11,7 @@ class Order extends Model
         'order_number',
         'shipping_details',
         'cart',
+        'sale_mode',
         'payment_method',
         'order_total',
         'status',

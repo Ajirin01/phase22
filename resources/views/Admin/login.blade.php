@@ -9,7 +9,7 @@
     <div class="card">
       <div class="card-body login-card-body">
         <p class="login-box-msg">Sign in</p>
-  
+        
         <form action="{{ route('login') }}" method="post">
             @csrf
             <div class="input-group mb-3">
@@ -25,6 +25,18 @@
                 <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-lock"></span>
+                </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <select class="form-control" name="branch" id="">
+                  <option value="">Please select office branch</option>
+                  <option value="minna">Minna</option>
+                  <option value="asaba">Asaba</option>
+                </select>
+                <div class="input-group-append">
+                <div class="input-group-text">
+                    <span class="fas fa-home"></span>
                 </div>
                 </div>
             </div>

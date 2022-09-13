@@ -38,11 +38,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         $gate->define('isOrderManager', function($user){
-            return $user->role == 'order manager' || $user->role == 'admin';
+            return $user->role == 'asaba order manager' ||  $user->role == 'minna order manager' || $user->role == 'admin';
         });
 
         $gate->define('isProductManager', function($user){
-            return $user->role == 'product manager' || $user->role == 'admin';
+            return $user->role == 'asaba product manager' || $user->role == 'minna product manager' || $user->role == 'admin';
         });
     }
 }

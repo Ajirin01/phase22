@@ -23,34 +23,19 @@ use Validator;
 class SiteController extends Controller
 {
     public function shop(){
-        
-        if(Session::get("shopping_type") == "wholesale"){
-            $products = Product::where('status', 'Active')->where('wholesale','on')->paginate(20);
-        }else{
-            $products = Product::where('status', 'Active')->where('price','!=', null)->paginate(20);
-        }
+        $products = Product::where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
         return view('shop',['products'=> $products]);
     }
 
     public function products_by_category($category){
         $category_data = Category::where('name', $category)->first();
-        // return response()->json($category_data);
-        if(Session::get("shopping_type") == "wholesale"){
-            $products_by_category = Product::where('category_id',$category_data->id)->where('status', 'Active')->where('wholesale','on')->paginate(20);
-        }else{
-            $products_by_category = Product::where('category_id',$category_data->id)->where('status', 'Active')->paginate(20);
-        }
+        $products_by_category = Product::where('category_id',$category_data->id)->where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
         return view('products_by_category',['products_by_category'=> $products_by_category, 'category'=> $category]);
     }
 
     public function products_by_brand($brand){
         $brand_data = Brand::where('name', $brand)->first();
-        // return response()->json($brand_data);
-        if(Session::get("shopping_type") == "wholesale"){
-            $products_by_brand = Product::where('brand_id', $brand_data->id)->where('status', 'Active')->where('wholesale','on')->paginate(20);
-        }else{
-            $products_by_brand = Product::where('brand_id', $brand_data->id)->where('status', 'Active')->paginate(20);
-        }
+        $products_by_brand = Product::where('brand_id', $brand_data->id)->where('status', 'Active')->where('sale_mode', Session::get("shopping_type"))->paginate(20);
         return view('products_by_brand',['products_by_brand'=> $products_by_brand, 'brand'=>  $brand]);
     }
     
@@ -107,12 +92,7 @@ class SiteController extends Controller
     }
 
     public function cart(){
-        if(Session::get('shopping_type') == 'wholesale'){
-            $carts = Cart::where('shopping_type','wholesale')->where('user_id', Auth::user()->id)->get();
-        }else{
-            $carts = Cart::where('shopping_type', 'retail')->where('user_id', Auth::user()->id)->get();
-        }
-        
+        $carts = Cart::where('shopping_type', Session::get("shopping_type"))->where('user_id', Auth::user()->id)->get();
         // return response()->json($carts);
         return view('cart', ['carts'=> $carts]);
     // return response()->json($user);
@@ -120,7 +100,7 @@ class SiteController extends Controller
 
     public function shopping_setting(Request $request){
         // return response()->json($request->shopping_type);
-        Session::put('sale_type', $request->shopping_type);
+        Session::put('shopping_type', $request->shopping_type);
         // return response()->json(Session::get('shopping_type'));
 
         return redirect()->back();
@@ -196,6 +176,7 @@ class SiteController extends Controller
                 $data['order_total'] = $request->total_with_shipping;
                 $data['payment_method'] = $request->payment_method;
                 $data['status'] = "pay on delivery";
+                $data['sale_mode'] = Session::get('shopping_type');
 
                 Order::create($data);
                 return response()->json("Order Placed!");
@@ -300,15 +281,11 @@ class SiteController extends Controller
 
     public function searchResult(Request $request){
         $search_query = $request->search_query;
-        if(Session::get("shopping_type") == "wholesale"){
-            $products = Product::where('status', 'Active')
-            ->where('name','like','%'.$search_query.'%')
-            ->orWhere('description','like','%'.$search_query.'%')->where('wholesale','on')->paginate(20);
-        }else{
-            $products = Product::where('status', 'Active')
-            ->where('name','like','%'.$search_query.'%')
-            ->orWhere('description','like','%'.$search_query.'%')->paginate(20);
-        }
+
+        $products = Product::where('status', 'Active')
+        ->where('name','like','%'.$search_query.'%')
+        ->where('sale_mode', Session::get("shopping_type"))->paginate(20);
+
         return view('search_result',['products'=> $products]);
     }
 

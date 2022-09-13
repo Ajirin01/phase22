@@ -98,8 +98,15 @@
                                                 <option value="admin">admin</option>
                                                 <option value="retail rep">retail rep</option>
                                                 <option value="wholesale rep">wholesale rep</option>
-                                                <option value="order manager">order manager</option>
-                                                <option value="product manager">product manager</option>
+
+                                                @if (Session::get('sale_type') == 'retail')
+                                                    <option value="minna order manager">order manager</option>
+                                                    <option value="minna product manager">product manager</option>
+                                                @else
+                                                    <option value="asaba order manager">order manager</option>
+                                                    <option value="asaba product manager">product manager</option>
+                                                @endif
+                                                
                                             </select>
                                         </div>
                                     </div>

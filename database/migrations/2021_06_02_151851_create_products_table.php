@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('wholesale_size')->nullable();
             $table->string('wholesale_price')->nullable();
             $table->string('size')->nullable();
-            $table->boolean('prescription');
+            $table->boolean('prescription')->default(false);
             $table->integer('stock');
             $table->integer('wholesale_stock')->nullable();
             $table->integer('shipping_cost');

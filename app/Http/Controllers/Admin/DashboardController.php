@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $sale_type = Session::get('sale_type');
         // echo $sale_type == null;
         // exit;
-        $products = Product::all();
+        $products = Product::where('sale_mode', $sale_type)->get();
 
         if($sale_type == null){
             Session::put('sale_type','retail');
@@ -28,12 +28,12 @@ class DashboardController extends Controller
         }
         // return response()->json(Session::get('sale_type'));
 
-        $latest_orders = Order::orderBy('id', 'desc')->take(7)->get();
-        $orders = Order::all();
+        $latest_orders = Order::where('sale_mode', $sale_type)->orderBy('id', 'desc')->take(7)->get();
+        $orders = Order::where('sale_mode', $sale_type)->get();
         // $products = Product::all();
         // $jan_sale = Sale::where();
 
-        $latest_products = Product::orderBy('id', 'desc')->take(10)->get();
+        $latest_products = Product::where('sale_mode', $sale_type)->orderBy('id', 'desc')->take(10)->get();
 
         // $sales = Sale::all();
         $carts = Cart::all();
@@ -42,7 +42,7 @@ class DashboardController extends Controller
         // sales by role
         $sales_retail = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
         $sales_wholesale = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-        $sales = Sale::where('status', 'confirmed')->get();
+        $sales = Sale::where('sale_type', 'wholesale')->where('status', 'confirmed')->get();
         
         $month_sale = [];
         $months = [];

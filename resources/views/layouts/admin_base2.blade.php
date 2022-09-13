@@ -101,6 +101,14 @@
                       <p>Add Product(s)</p>
                     </a>
                   </li>
+
+                  <li class="nav-item">
+                    <a href="{{ route('product-bulk-edit')}}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Products Bulk Edit</p>
+                    </a>
+                  </li>
+                  
                 </ul>
               </li>
               <li class="nav-item has-treeview">
@@ -313,6 +321,9 @@
                 </form>
               </li>
             @endcan
+
+            <span class="nav-link text-danger">Operation Mode: {{ strtoupper(substr(Session::get( 'sale_type' ),0, 1)). substr(Session::get( 'sale_type' ), 1, )}}</span>
+            
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

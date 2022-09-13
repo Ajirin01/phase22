@@ -24,15 +24,8 @@ class SalesController extends Controller
 
     public function index()
     {
-        if(Auth::user()->role == 'retail rep'){
-            $sales = Sale::where('sale_type', 'retail')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'wholesale rep'){
-            $sales = Sale::where('sale_type', 'wholesale')->orderBy('id', 'desc')->get();
-        }else if(Auth::user()->role == 'admin'){
-            $sales = Sale::orderBy('id', 'desc')->get();
-        }
+        $sales = Sale::where('sale_type', Session::get('sale_type'))->orderBy('id', 'desc')->get();
 
-        
         // return response()->json($sales);
         return view('Admin.Pos.sales_list',['sales' => $sales]);
     }
@@ -40,11 +33,7 @@ class SalesController extends Controller
     public function create()
     {
         $sale_number = $this->sale_number();
-        if(Session::get('sale_type') == 'retail'){
-            $products = Product::where('price', '!=', null)->where('status','active')->get();
-        }else{
-            $products = Product::where('wholesale', 'on')->where('status','active')->get();
-        }
+        $products = Product::where('sale_mode', Session::get('sale_type'))->where('status','active')->get();
         
         return view('Admin.Pos.add_product_to_sell',['products' => $products, 'sale_number'=> $sale_number]);
     }

@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category as Category;
 use Validator;
+use Session;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::where('sale_mode', Session::get('sale_type'))->where('status', 'active')->get();
         return view('Admin.Categories.category_list', ['categories'=> $categories]);
     }
     
@@ -29,6 +30,7 @@ class CategoriesController extends Controller
         ];
         $data = array();
         $data['name'] = $request->name;
+        $data['sale_mode'] = Session::get('sale_type');
         
         if($request->status == "on"){
             $data['status'] = "Active";

@@ -1,3 +1,8 @@
+<?php
+
+  setlocale(LC_MONETARY, 'en_US');
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +48,7 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link text-primary" data-widget="control-sidebar" data-slide="true" href="#" role="button"><span>{{strtoupper(Session::get('sale_type'))}}</span></a>
+          <a class="nav-link text-primary" data-widget="control-sidebar" data-slide="true" href="#" role="button"><span>Branch: {{strtoupper(Session::get('branch'))}}</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
@@ -97,6 +102,14 @@
                       <p>Add Product(s)</p>
                     </a>
                   </li>
+
+                  <li class="nav-item">
+                    <a href="{{ route('product-bulk-edit')}}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Products Bulk Edit</p>
+                    </a>
+                  </li>
+
                 </ul>
               </li>
               <li class="nav-item has-treeview">
@@ -310,6 +323,7 @@
               </li>
             @endcan
           </ul>
+          <span class="nav-link text-danger">Operation Mode: {{ strtoupper(substr(Session::get( 'sale_type' ),0, 1)). substr(Session::get( 'sale_type' ), 1, )}}</span>
         </nav>
         <!-- /.sidebar-menu -->
       </div>
@@ -392,7 +406,7 @@
 
       
 
-      @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'retail')
+      @if (Auth::user()->role == 'admin' && Session::get('branch') == 'minna')
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
@@ -411,7 +425,7 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Retail Sales</span>
+              <span class="info-box-text">Sales</span>
               <span class="info-box-number">{{ count(($sales_retail)) }}</span>
             </div>
             <!-- /.info-box-content -->
@@ -420,13 +434,13 @@
         </div>
       @endif
       
-      @if (Auth::user()->role == 'retail rep' && Session::get('sale_type') == 'retail')
+      @if (Auth::user()->role == 'retail rep' && Session::get('branch') == 'minna')
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Retail Sales</span>
+              <span class="info-box-text">Sales</span>
               <span class="info-box-number">{{ count(($sales_retail)) }}</span>
             </div>
             <!-- /.info-box-content -->
@@ -435,7 +449,7 @@
         </div>
       @endif
 
-      @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'wholesale')
+      @if (Auth::user()->role == 'admin' && Session::get('branch') == 'asaba')
       <div class="col-12 col-sm-6 col-md-3">
         <div class="info-box mb-3">
           <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
@@ -454,7 +468,7 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Wholesale Sales</span>
+              <span class="info-box-text">Sales</span>
               <span class="info-box-number">{{ count(($sales_wholesale)) }}</span>
             </div>
             <!-- /.info-box-content -->
@@ -463,13 +477,13 @@
         </div>
       @endif
       
-      @if (Auth::user()->role == 'wholesale rep' && Session::get('sale_type') == 'wholesale')
+      @if (Auth::user()->role == 'wholesale rep' && Session::get('branch') == 'asaba')
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
             <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Wholesale Sales</span>
+              <span class="info-box-text">Sales</span>
               <span class="info-box-number">{{ count(($sales_wholesale)) }}</span>
             </div>
             <!-- /.info-box-content -->
@@ -524,19 +538,19 @@
                   @endphp
                   
                   @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'retail')
-                  <span class="text-danger">Total with wholesale:</span> <strong>N {{ $sales_total }}.00</strong>  | <span class="text-danger">Retail Total:</span> <strong>N {{ $sales_total_retail }}.00</strong>  
+                  <span class="text-danger">Total with wholesale:</span> <strong>N {{ number_format( $sales_total ) }}.00</strong>  | <span class="text-danger">Retail Total:</span> <strong>N {{ number_format($sales_total_retail ) }}.00</strong>  
                   @endif
 
                   @if (Auth::user()->role == 'admin' && Session::get('sale_type') == 'wholesale')
-                     <span class="text-danger">Total with retail:</span> <strong>N {{ $sales_total }}.00</strong>  | <span class="text-danger">Wholeseles Total:</span> <strong>N {{ $sales_total_wholesale }}.00</strong>  
+                     <span class="text-danger">Total with retail:</span> <strong>N {{ number_format( $sales_total ) }}.00</strong>  | <span class="text-danger">Wholeseles Total:</span> <strong>N {{ number_format($sales_total_wholesale ) }}.00</strong>  
                   @endif
 
                   @if (Auth::user()->role != 'admin' && Session::get('sale_type') == 'retail')
-                    <span class="text-danger">Retail Total:</span> <strong>N {{ $sales_total_retail }}.00</strong>  
+                    <span class="text-danger">Retail Total:</span> <strong>N {{ number_format( $sales_total_retail ) }}.00</strong>  
                   @endif
 
                   @if (Auth::user()->role != 'admin' && Session::get('sale_type') == 'wholesale')
-                     <span class="text-danger">Wholeseles Total:</span> <strong>N {{ $sales_total_wholesale }}.00</strong>  
+                     <span class="text-danger">Wholeseles Total:</span> <strong>N {{ number_format( $sales_total_wholesale ) }}.00</strong>  
                   @endif
 
 

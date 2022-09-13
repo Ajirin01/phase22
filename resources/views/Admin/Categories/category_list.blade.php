@@ -40,7 +40,7 @@
                     @foreach ($categories as $category)
                       <tr>
                         <td>{{$category->name}}</td>
-                        <td>{{$category->status}}Win 95+</td>
+                        <td>{{$category->status}}</td>
                         <td>
                             <a class="btn" href="{{ route('categories.edit', $category->id) }}">
                                 <i class="fas fa-edit text-warning"></i> Edit

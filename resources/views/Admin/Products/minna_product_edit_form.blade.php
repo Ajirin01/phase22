@@ -23,7 +23,7 @@
         <div class="card card-outline card-info">
           <div class="card-header">
             <h3 class="card-title">
-              Product Details
+              {{ strtoupper(substr(Session::get( 'sale_type' ),0, 1)). substr(Session::get( 'sale_type' ), 1, )}} Product Details
             </h3>
             <!-- tools box -->
             <div class="card-tools">
@@ -59,8 +59,10 @@
                             <label>Category</label>
                             <select name="category" class="form-control">
                               <option value="{{ $category->id }}">{{$category->name}}</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                @foreach ($categories as $cat)
+                                    @if ($cat->id != $category->id)
+                                      <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -70,8 +72,10 @@
                             <label>Brand</label>
                             <select name="brand" class="form-control">
                                 <option value="{{ $brand->id }}">{{$brand->name}}</option>
-                                @foreach ($brands as $brand)
-                                    <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @foreach ($brands as $bra)
+                                    @if ($bra->id != $brand->id)
+                                      <option value="{{$bra->id}}">{{$bra->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -108,39 +112,9 @@
                         </div>
                   </div>
                   <div class="mb-3">
-                      <label>Please check if wholesale is available</label><br>
-                      <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                  <input name="wholesale" type="checkbox">
-                              </span>
-                          </div>
-                          <input name="wholesale_price" type="text" placeholder="wholesale price" class="form-control">
-                          <input name="wholesale_size" type="text" placeholder="wholesale size" class="form-control">
-                          <select name="wholasale_quantity" class="form-control">
-                              <option value="Carton">Carton</option>
-                              <option value="Schacet">Schacet</option>
-                          </select>
-                          <input name="wholesale_stock" type="text" placeholder="wholesale stock" class="form-control">
-                          <select name="wholasale_stock_quantity" class="form-control">
-                              <option value="Carton">Carton</option>
-                              <option value="Schacet">Schacet</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="mb-3">
-                      <div class="form-group">
-                          <label>Require Prescription?</label>
-                          <select name="prescription" class="form-control">
-                              <option value="0">No</option>
-                              <option value="1">Yes</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="mb-3">
                       <div class="form-group">
                           <label>Stock</label>
-                          <input type="text" class="form-control" name="stock" value="{{ $product->stock }}" placeholder="Enter ...">
+                          <input type="number" class="form-control" name="stock" value="{{ $product->stock }}" placeholder="Enter ...">
                       </div>
                   </div>
                   <div class="mb-3">

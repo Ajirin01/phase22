@@ -24,7 +24,6 @@ Route::get('/home', function(){
     return redirect('/');
 })->name('home');
 
-
 Route::get('product-detials/{product}', 'SiteController@product_details')->name('product-details');
 Route::post('add-to-cart/', 'SiteController@add_to_cart')->name('add-to-cart')->middleware('auth');
 Route::get('cart/', 'SiteController@cart')->name('cart')->middleware('auth');
@@ -53,6 +52,9 @@ Route::put('hanle-edit-address/{id}', 'SiteController@handleEditAddress')->name(
 Route::prefix('admin')->group(function () {
     Route::get('dashboard', 'Admin\DashboardController@dashboard')->name('dashboard')->middleware('admin');
     Route::resource('products',	'Admin\ProductsController')->middleware('product');
+    Route::get('products-bulk-edit',	'Admin\ProductsController@productBulkEditCreate')->middleware('product')->name('product-bulk-edit');
+    Route::post('products-bulk-edit-minna',	'Admin\ProductsController@productBulkEditStoreMinna')->middleware('product')->name('product-bulk-edit-minna');
+    Route::post('products-bulk-edit-asaba',	'Admin\ProductsController@productBulkEditStoreAsaba')->middleware('product')->name('product-bulk-edit-asaba');
     Route::get('order/{type}',	'Admin\OrdersController@getOrdersByType')->name('orders_by_type')->middleware('order');
     Route::get('order-details/{order}',	'Admin\OrdersController@orderDetails')->name('order_details')->middleware('order');
     Route::post('update_order_status/{order}', 'Admin\OrdersController@updateOrderStatus')->name('update_order_status')->middleware('order');
@@ -74,3 +76,23 @@ Route::prefix('pos')->group(function () {
     Route::post('process_sale', 'Admin\Pos\SalesController@processSale')->name('process_sale')->middleware('sale');
     Route::resource('sales',	'Admin\Pos\SalesController')->middleware('sale');
 }); 
+
+Route::get('sep_sale_mode', function(){
+    // instantiate product model object
+    $Product = new App\Product;
+
+     // instantiate sale model object
+     $Sale = new App\Sale;
+
+    // change sale mode to wholesale where wholesale is ON and also make retail price wholesale price
+    $Product::where('wholesale', 'on')->update(['sale_mode'=> 'wholesale', 'wholesale_price'=> DB::raw('products.price')]);
+
+    // change sale mode to retail where wholesale is OFF
+    $Product::where('wholesale', 'off')->update(['sale_mode'=> 'retail']);
+
+    // change sale type to wholesale where sale_type is empty(null)
+    $Sale::where('sale_type', '')->update(['sale_type'=> 'wholesale']);
+
+    // return response()->json($Product::where('wholesale', 'off')->get());
+    return response()->json($Product::all());
+});

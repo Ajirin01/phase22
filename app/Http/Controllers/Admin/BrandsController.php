@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Brand as Brand;
 use Validator;
+use Session;
 
 class BrandsController extends Controller
 {
     public function index()
     {
-        $brands = Brand::all();
+        $brands = Brand::where('sale_mode', Session::get('sale_type'))->where('status', 'active')->get();
         return view('Admin.Brands.brand_list', ['brands'=> $brands]);
     }
 
@@ -28,6 +29,7 @@ class BrandsController extends Controller
         ];
         $data = array();
         $data['name'] = $request->name;
+        $data['sale_mode'] = Session::get('sale_type');
         
         if($request->status == "on"){
             $data['status'] = "Active";
