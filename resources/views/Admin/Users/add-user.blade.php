@@ -99,7 +99,7 @@
                                                 <option value="retail rep">retail rep</option>
                                                 <option value="wholesale rep">wholesale rep</option>
 
-                                                @if (Session::get('sale_type') == 'retail')
+                                                @if (Session::get('sale_type') == 'wholesale')
                                                     <option value="minna order manager">order manager</option>
                                                     <option value="minna product manager">product manager</option>
                                                 @else

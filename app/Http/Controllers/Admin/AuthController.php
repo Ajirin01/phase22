@@ -21,15 +21,15 @@ class AuthController extends Controller
             if(Auth::user()->role != 'admin' && empty($branch)){
                 Auth::logout();
                 return redirect()->route('admin-login')->with('error', 'login error! Please select branch if you are not admin');
-            }else if((Auth::user()->role == 'retail rep' || Auth::user()->role == 'minna product manager' || Auth::user()->role == 'minna order manager') && $branch != 'minna'){
-                Auth::logout();
-                return redirect()->route('admin-login')->with('error', 'login error! You do not have access to Asaba branch');
-            }else if((Auth::user()->role == 'wholesale rep' || Auth::user()->role == 'asaba product manager' || Auth::user()->role == 'asaba order manager' ) && $branch != 'asaba'){
+            }else if((Auth::user()->role == 'retail rep' || Auth::user()->role == 'asaba product manager' || Auth::user()->role == 'asaba order manager') && $branch != 'asaba'){
                 Auth::logout();
                 return redirect()->route('admin-login')->with('error', 'login error! You do not have access to Minna branch');
-            }else if(Auth::user()->role == 'admin' || Auth::user()->role == 'minna product manager' || Auth::user()->role == 'minna order manager' || Auth::user()->role == 'retail rep' || $branch == 'minna'){
+            }else if((Auth::user()->role == 'wholesale rep' || Auth::user()->role == 'minna product manager' || Auth::user()->role == 'minna order manager' ) && $branch != 'minna'){
+                Auth::logout();
+                return redirect()->route('admin-login')->with('error', 'login error! You do not have access to Asaba branch');
+            }else if(Auth::user()->role == 'admin' || Auth::user()->role == 'asaba product manager' || Auth::user()->role == 'asaba order manager' || Auth::user()->role == 'retail rep' || $branch == 'asaba'){
                 Session::put('sale_type', 'retail');
-            }else if(Auth::user()->role == 'admin' || Auth::user()->role == 'wholesale rep' || Auth::user()->role == 'asaba product manager' || Auth::user()->role == 'asaba order manager' || $branch == 'asaba'){
+            }else if(Auth::user()->role == 'admin' || Auth::user()->role == 'wholesale rep' || Auth::user()->role == 'minna product manager' || Auth::user()->role == 'minna order manager' || $branch == 'minna'){
                 Session::put('sale_type', 'wholesale');
             }
 
