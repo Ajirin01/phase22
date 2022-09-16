@@ -27,7 +27,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <form action="{{ route('product-bulk-edit-minna') }}" method="post">
+                <form action="{{ route('product-bulk-edit-asaba') }}" method="post">
                     @csrf
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
@@ -46,8 +46,27 @@
                             <tr> 
                                 <td>{{$product->id}} <input id="product-id{{$product->id}}" type="hidden" name="id[]"  value="{{$product->id}}"></td>
                                 <td>{{$product->name}} <input id="product-name{{$product->id}}" type="hidden"  value="{{$product->name}}"></td>
-                                <td width="100px"><input id="product-stock{{$product->id}}" name="stock[]" class="form-control" min="1" type="number"  id="" onchange="getStock({{$product->id}})" value="{{ $product->stock }}" required></td>
-                                <td width="100px"><input id="product-price{{$product->id}}" name="price[]" class="form-control" min="1" type="number"  id="" onchange="getPrice({{$product->id}})" value="{{ $product->price }}" required></td>
+                                <td width="100px" class="form-group">
+                                  <input id="product-stock{{$product->id}}" name="wholesale_stock[]" class="form-control" min="0" type="number"  id="" onchange="getStock({{$product->id}})" value="{{ explode(" ", $product->wholesale_stock)[0] }}" >
+                                  <select name="wholesale_stock_quantity" class="form-control">
+                                    <option value="sachet">sachet</option>
+                                    <option value="bottle">bottle</option>
+                                    <option value="card">card</option>
+                                    <option value="ampoule">ampoule</option>
+                                    <option value="tube">tube</option>
+                                    <option value="pack">pack</option>
+                                    <option value="tablet">tablet</option>
+                                    <option value="box">box</option>
+                                    <option value="tin">tin</option>
+                                    <option value="piece(s)">piece(s)</option>
+                                    <option value="infusion">infusion</option>
+                                    <option value="vail">vail</option>
+                                    <option value="capsule">capsule</option>
+                                  </select>
+                                </td>
+                                <td width="100px">
+                                  <input id="product-price{{$product->id}}" name="wholesale_price[]" class="form-control" min="0" type="number"  id="" onchange="getPrice({{$product->id}})" value="{{ $product->wholesale_price }}" >
+                                </td>
                                 <td width="100px">
                                   <select name="status[]" id="product-status{{$product->id}}" class="form-control" onchange="getPrice({{$product->id}})">
                                     <option value="{{strtolower($product->status)}}">{{strtolower($product->status)}}</option>

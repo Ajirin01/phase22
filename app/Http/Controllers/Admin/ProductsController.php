@@ -14,12 +14,7 @@ class ProductsController extends Controller
 {
     public function index()
     {
-        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
-            $products = Product::where('sale_mode', 'wholesale')->get();
-        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
-            $products = Product::where('sale_mode', 'retail')->get();
-        }
-        
+        $products = Product::where('sale_mode', Session::get('sale_type'))->get();
         return view('Admin.Products.product_list',['products' => $products]);
     }
     
@@ -28,9 +23,9 @@ class ProductsController extends Controller
         $brands = Brand::all();
         $categories = Category::all();
 
-        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'retail'){
             $view = 'Admin.Products.asaba_product_creation_form';
-        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'wholesale'){
             $view = 'Admin.Products.minna_product_creation_form';
         }
 
@@ -41,7 +36,7 @@ class ProductsController extends Controller
     {
         // return response()->json($request->all());
 
-        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+        if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'wholesale'){
             $rule = [
                 'category_id'=> 'required',
                 'brand_id'=> 'required',
@@ -54,7 +49,7 @@ class ProductsController extends Controller
                 'wholesale_quantity'=> 'required'
             ];
             
-        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+        }else if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'retail'){
             $rule = [
                 'category_id'=> 'required',
                 'brand_id'=> 'required',
@@ -150,9 +145,9 @@ class ProductsController extends Controller
         // echo json_encode($brand);
         // exit;
 
-        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'retail'){
             $view = 'Admin.Products.asaba_product_edit_form';
-        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'wholesale'){
             $view = 'Admin.Products.minna_product_edit_form';
         }
 
@@ -180,9 +175,9 @@ class ProductsController extends Controller
         $data = $request->all();
 
         if($request->status == "on"){
-            $data['status'] = "Active";
+            $data['status'] = "active";
         }else{
-            $data['status'] = "Inactive";
+            $data['status'] = "inactive";
         }
         
         if($valid->fails()){
@@ -234,18 +229,18 @@ class ProductsController extends Controller
 
     public function productBulkEditCreate(){
         
-        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'wholesale'){
-            $products = Product::where('sale_mode', 'wholesale')->get();
-            $view = 'Admin.Products.asaba_product_bulk_edit_form';
-        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'retail'){
+        if(Session::get('branch') == 'asaba' || Session::get('sale_type') == 'retail'){
             $products = Product::where('sale_mode', 'retail')->get();
+            $view = 'Admin.Products.asaba_product_bulk_edit_form';
+        }else if(Session::get('branch') == 'minna' || Session::get('sale_type') == 'wholesale'){
+            $products = Product::where('sale_mode', 'wholesale')->get();
             $view = 'Admin.Products.minna_product_bulk_edit_form';
         }
 
         return view($view, ['products'=> $products]);
     }
 
-    public function productBulkEditStoreMinna(Request $request){
+    public function productBulkEditStoreAsaba(Request $request){
         $loop_count = count($request->checked);
 
         for ($i=0; $i < $loop_count; $i++) { 
@@ -261,7 +256,7 @@ class ProductsController extends Controller
         return redirect()->back()->with('success', 'products successfully' . ($request->action === 'update' ? ' updated' : ' deleted'));
     }
 
-    public function productBulkEditStoreAsaba(Request $request){
+    public function productBulkEditStoreMinna(Request $request){
         // return response()->json($request->all());
         $loop_count = count($request->checked);
 

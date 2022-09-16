@@ -90,18 +90,17 @@
                       </div>
                     </div>
                   </div>
-
                   <div class="mb-3">
-                    <div class="form-group">
-                        <label>Product Price</label>
-                        <input type="number" class="form-control" value="{{ old('price') }}" name="price" min="0" placeholder="Enter Product Price">
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <label>Product Size</label><br>
+                      <label>Please Fill price, stock and size for wholesale</label><br>
                       <div class="input-group">
-                          <input type="text" class="form-control" name="size" placeholder="Enter Product Size" value="{{ old('size') }}">
-                          <select name="retail_quantity" class="form-control">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                  <input name="wholesale" type="checkbox" checked>
+                              </span>
+                          </div>
+                          <input name="wholesale_price" type="text" placeholder="wholesale price" value="{{ old('wholesale_price') }}" class="form-control">
+                          <input name="wholesale_size" type="text" placeholder="wholesale size" value="{{ old('wholesale_size') }}" class="form-control">
+                          <select name="wholesale_quantity" class="form-control" value="{{ old('wholesale_quantity') }}">
                             <option value="sachet">sachet</option>
                             <option value="bottle">bottle</option>
                             <option value="card">card</option>
@@ -116,15 +115,24 @@
                             <option value="vail">vail</option>
                             <option value="capsule">capsule</option>
                           </select>
-                        </div>
+                          <input name="wholesale_stock" type="number" min="0" placeholder="wholesale stock" value="{{ old('wholesale_stock') }}" class="form-control">
+                          <select name="wholesale_stock_quantity" class="form-control">
+                            <option value="sachet">sachet</option>
+                            <option value="bottle">bottle</option>
+                            <option value="card">card</option>
+                            <option value="ampoule">ampoule</option>
+                            <option value="tube">tube</option>
+                            <option value="pack">pack</option>
+                            <option value="tablet">tablet</option>
+                            <option value="box">box</option>
+                            <option value="tin">tin</option>
+                            <option value="piece(s)">piece(s)</option>
+                            <option value="infusion">infusion</option>
+                            <option value="vail">vail</option>
+                            <option value="capsule">capsule</option>
+                          </select>
+                      </div>
                   </div>
-                  <div class="mb-3">
-                    <div class="form-group">
-                        <label>Stock</label>
-                        <input type="number" class="form-control" name="stock" min="0" value="{{ old('stock') }}">
-                    </div>
-                  </div>
-
                   <div class="mb-3">
                       <label>Prouduct Description</label>
                       <textarea name="description" class="textarea" placeholder="Place some text here"

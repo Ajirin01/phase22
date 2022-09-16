@@ -55,17 +55,17 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                      <div class="form-group">
-                          <label>Category</label>
-                          <select name="category" class="form-control">
-                            <option value="{{ $category->id }}">{{$category->name}}</option>
-                              @foreach ($categories as $cat)
-                                  @if ($cat->id != $category->id)
-                                    <option value="{{$cat->id}}">{{$cat->name}}</option>
-                                  @endif
-                              @endforeach
-                          </select>
-                      </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" class="form-control">
+                              <option value="{{ $category->id }}">{{$category->name}}</option>
+                                @foreach ($categories as $cat)
+                                    @if ($cat->id != $category->id)
+                                      <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-group">
@@ -86,6 +86,12 @@
                           <input type="text" class="form-control" name="name" value="{{ $product->name }}" placeholder="Enter Product Name">
                       </div>
                   </div>
+                  <div class="mb-3">
+                      <div class="form-group">
+                          <label>Product Price</label>
+                          <input type="text" class="form-control" name="price" value="{{ $product->price }}" placeholder="Enter Product Price">
+                      </div>
+                  </div>
                   <div class="md-3">
                       <label for="exampleInputFile">Product Image</label>
                       <div class="input-group">
@@ -96,62 +102,19 @@
                       </div>
                   </div>
                   <div class="mb-3">
-                    <div class="mb-3">
-                      <label>Please Fill price, stock and size for wholesale</label><br>
+                    <label>Product Size</label><br>
                       <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                  <input name="wholesale" type="checkbox" checked>
-                              </span>
-                          </div>
-                          <input name="wholesale_price" type="text" placeholder="wholesale price" value="{{ $wholesale_price }}" class="form-control">
-                          <input name="wholesale_size" type="text" placeholder="wholesale size" value="{{ $wholesale_size }}" class="form-control">
-                          <select name="wholesale_quantity" class="form-control" value="{{ $wholesale_quantity }}">
-                            <option value="sachet">sachet</option>
-                            <option value="bottle">bottle</option>
-                            <option value="card">card</option>
-                            <option value="ampoule">ampoule</option>
-                            <option value="tube">tube</option>
-                            <option value="pack">pack</option>
-                            <option value="tablet">tablet</option>
-                            <option value="box">box</option>
-                            <option value="tin">tin</option>
-                            <option value="piece(s)">piece(s)</option>
-                            <option value="infusion">infusion</option>
-                            <option value="vail">vail</option>
-                            <option value="capsule">capsule</option>
+                          <input type="text" class="form-control" value="{{ $product->size }}" name="size" placeholder="Enter Product Size">
+                          <select name="retail_quantity" class="form-control">
+                            <option value="Carton">Carton</option>
+                            <option value="Schacet">Schacet</option>
                           </select>
-                          <input name="wholesale_stock" type="number" min="0" placeholder="wholesale stock" value="{{ $wholesale_stock }}" class="form-control">
-                          <select name="wholesale_stock_quantity" class="form-control">
-                            <option value="sachet">sachet</option>
-                            <option value="bottle">bottle</option>
-                            <option value="card">card</option>
-                            <option value="ampoule">ampoule</option>
-                            <option value="tube">tube</option>
-                            <option value="pack">pack</option>
-                            <option value="tablet">tablet</option>
-                            <option value="box">box</option>
-                            <option value="tin">tin</option>
-                            <option value="piece(s)">piece(s)</option>
-                            <option value="infusion">infusion</option>
-                            <option value="vail">vail</option>
-                            <option value="capsule">capsule</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="mb-3">
-                      <div class="form-group">
-                          <label>Require Prescription?</label>
-                          <select name="prescription" class="form-control">
-                              <option value="0">No</option>
-                              <option value="1">Yes</option>
-                          </select>
-                      </div>
+                        </div>
                   </div>
                   <div class="mb-3">
                       <div class="form-group">
                           <label>Stock</label>
-                          <input type="text" class="form-control" name="stock" value="{{ $product->stock }}" placeholder="Enter ...">
+                          <input type="number" class="form-control" name="stock" value="{{ $product->stock }}" placeholder="Enter ...">
                       </div>
                   </div>
                   <div class="mb-3">
