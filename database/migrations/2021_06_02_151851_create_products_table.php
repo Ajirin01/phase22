@@ -27,7 +27,7 @@ class CreateProductsTable extends Migration
             $table->boolean('prescription')->default(false);
             $table->integer('stock');
             $table->integer('wholesale_stock')->nullable();
-            $table->integer('shipping_cost');
+            $table->integer('shipping_cost')->nullable();
             $table->integer('brand_id')->unsigned();
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->string('sale_type')->nullable();

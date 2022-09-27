@@ -155,7 +155,7 @@ class SalesController extends Controller
                 if(Session::get('sale_type') == 'wholesale'){ 
                     $product = Product::find($cart->product_id);
     
-                    $initial_stock = $product->wholesale_stock;
+                    $initial_stock = explode(' ',$product->wholesale_stock)[0];
                     $new_stock = $initial_stock - $cart->product_quantity;
                     
                     $product->update(['wholesale_stock'=> $new_stock]);
