@@ -12,7 +12,7 @@ class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('sale_mode', Session::get('sale_type'))->where('status', 'active')->get();
+        $categories = Category::where('status', 'active')->get();
         return view('Admin.Categories.category_list', ['categories'=> $categories]);
     }
     

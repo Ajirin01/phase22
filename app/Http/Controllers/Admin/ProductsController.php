@@ -142,6 +142,7 @@ class ProductsController extends Controller
         $brand = Brand::find($product->brand_id);
         $category = Category::find($product->category_id);
 
+        // return response()->json($category);
         // echo json_encode($brand);
         // exit;
 
