@@ -58,11 +58,8 @@
                         <div class="form-group">
                             <label>Category</label>
                             <select name="category" class="form-control">
-                              <option value="{{ $category->id }}">{{$category->name}}</option>
                                 @foreach ($categories as $cat)
-                                    @if ($cat->id != $category->id)
-                                      <option value="{{$cat->id}}">{{$cat->name}}</option>
-                                    @endif
+                                  <option value="{{$cat->id}}">{{$cat->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -71,11 +68,8 @@
                         <div class="form-group">
                             <label>Brand</label>
                             <select name="brand" class="form-control">
-                                <option value="{{ $brand->id }}">{{$brand->name}}</option>
                                 @foreach ($brands as $bra)
-                                    @if ($bra->id != $brand->id)
-                                      <option value="{{$bra->id}}">{{$bra->name}}</option>
-                                    @endif
+                                  <option value="{{$bra->id}}">{{$bra->name}}</option>
                                 @endforeach
                             </select>
                         </div>
